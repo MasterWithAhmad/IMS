@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Inventory Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>IMS</h3>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/inventory">
+                    <i class="fas fa-box"></i> Inventory
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/reports">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/auth/logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col">
+                    <h2>Reports Dashboard</h2>
+                    <p class="text-muted">Generate and view various reports</p>
+                </div>
+            </div>
+
+            <!-- Report Cards -->
+            <div class="row mb-4">
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Inventory Value Report</h5>
+                            <p class="card-text">View detailed inventory valuation and product costs.</p>
+                            <div class="text-end">
+                                <a href="/reports/inventory-value" class="btn btn-primary">
+                                    <i class="fas fa-file-alt"></i> View Report
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Low Stock Report</h5>
+                            <p class="card-text">Monitor products that need reordering.</p>
+                            <div class="text-end">
+                                <a href="/reports/low-stock" class="btn btn-primary">
+                                    <i class="fas fa-exclamation-triangle"></i> View Report
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Transactions Report</h5>
+                            <p class="card-text">Track all stock movements and transactions.</p>
+                            <div class="text-end">
+                                <a href="/reports/transactions" class="btn btn-primary">
+                                    <i class="fas fa-exchange-alt"></i> View Report
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Category Analysis</h5>
+                            <p class="card-text">Analyze product distribution by categories.</p>
+                            <div class="text-end">
+                                <a href="/reports/category-analysis" class="btn btn-primary">
+                                    <i class="fas fa-chart-pie"></i> View Report
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Options -->
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Export Options</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Export as CSV</h6>
+                                    <div class="list-group">
+                                        <a href="/reports/export-csv?type=inventory" class="list-group-item list-group-item-action">
+                                            <i class="fas fa-file-csv"></i> Export Inventory Data
+                                        </a>
+                                        <a href="/reports/export-csv?type=transactions" class="list-group-item list-group-item-action">
+                                            <i class="fas fa-file-csv"></i> Export Transactions Data
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Generate PDF Report</h6>
+                                    <form action="/reports/generate-pdf" method="POST">
+                                        <div class="mb-3">
+                                            <select class="form-select" name="report_type" required>
+                                                <option value="">Select Report Type</option>
+                                                <option value="inventory">Inventory Report</option>
+                                                <option value="transactions">Transactions Report</option>
+                                                <option value="low_stock">Low Stock Report</option>
+                                                <option value="category">Category Analysis</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-file-pdf"></i> Generate PDF
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Statistics -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Category Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Recent Transactions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Product</th>
+                                            <th>Type</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% recentTransactions.forEach(transaction => { %>
+                                            <tr>
+                                                <td><%= new Date(transaction.date).toLocaleDateString() %></td>
+                                                <td><%= transaction.product_name %></td>
+                                                <td>
+                                                    <span class="badge <%= transaction.type === 'in' ? 'bg-success' : 'bg-danger' %>">
+                                                        <%= transaction.type %>
+                                                    </span>
+                                                </td>
+                                                <td><%= transaction.quantity %></td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Initialize category chart
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: <%- JSON.stringify(categories.map(c => c.category)) %>,
+                datasets: [{
+                    data: <%- JSON.stringify(categories.map(c => c.total_items)) %>,
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

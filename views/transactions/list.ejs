@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Inventory Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>IMS</h3>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/inventory">
+                    <i class="fas fa-box"></i> Inventory
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/transactions">
+                    <i class="fas fa-exchange-alt"></i> Transactions
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/reports">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/auth/logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col">
+                    <h2>Transaction History</h2>
+                    <p class="text-muted">View all stock movements and adjustments</p>
+                </div>
+            </div>
+
+            <!-- Flash Messages -->
+            <% if (messages && messages.success && messages.success.length > 0) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <%= messages.success %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+            <% if (messages && messages.error && messages.error.length > 0) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <%= messages.error %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+
+            <!-- Transactions Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="transactionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Type</th>
+                                    <th>Quantity</th>
+                                    <th>Previous Stock</th>
+                                    <th>New Stock</th>
+                                    <th>Notes</th>
+                                    <th>Created By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% transactions.forEach(transaction => { %>
+                                    <tr>
+                                        <td><%= new Date(transaction.created_at).toLocaleString() %></td>
+                                        <td><%= transaction.product_name %></td>
+                                        <td><%= transaction.product_category %></td>
+                                        <td>
+                                            <% if (transaction.type === 'in') { %>
+                                                <span class="badge bg-success">Stock In</span>
+                                            <% } else { %>
+                                                <span class="badge bg-warning text-dark">Stock Out</span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= transaction.quantity %></td>
+                                        <td><%= transaction.previous_quantity %></td>
+                                        <td><%= transaction.new_quantity %></td>
+                                        <td><%= transaction.notes || '-' %></td>
+                                        <td><%= transaction.created_by_user || 'System' %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        $(document).ready(function() {
+            $('#transactionsTable').DataTable({
+                order: [[0, 'desc']], // Sort by date descending
+                pageLength: 25 // Show 25 entries per page
+            });
+        });
+    </script>
+</body>
+</html> 
